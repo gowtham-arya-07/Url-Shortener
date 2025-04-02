@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        table { width: 80%; margin: auto; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid #ccc; }
+        th { background-color: #f4f4f4; }
+        button { background-color: red; color: white; padding: 5px; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>Admin Dashboard</h2>
+    <table>
+        <tr>
+            <th>Original URL</th>
+            <th>Short URL</th>
+            <th>Clicks</th>
+            <th>Actions</th>
+        </tr>
+        {% for url in urls %}
+        <tr>
+            <td><a href="/{{ url.original_url }}" target="_blank">/{{ url.original_url }}</a></td>
+            <td><a href="/{{ url.short_url }}" target="_blank">/{{ url.short_url }}</a></td>
+            <td>{{ url.click_count }}</td>
+            <td>
+                <form action="/admin/delete/{{ url.short_url }}" method="post" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
