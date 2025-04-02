@@ -52,7 +52,7 @@ def shorten_url():
     db.session.commit()
     
     qr_code = generate_qr(f"http://localhost:5000/{short_url}")
-    return render_template('index.html', short_url=f"http://localhost:5000/{short_url}", qr_code=qr_code, error=False)
+    return render_template('index.html', short_url=f"http://localhost:5000/{short_url}", qr_code=qr_code, error=False, original_url=original_url)
 
 @app.route('/<short_url>')
 def redirect_url(short_url):
