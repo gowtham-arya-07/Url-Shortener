@@ -22,5 +22,7 @@ Ensure you have Python installed (version 3.6 or later).
    git clone https://github.com/your-repo/url-shortener.git
    cd url-shortener
 2. Run the App
-  '''sh
+   ```sh
+   pip install -r requirements.txt
    python app.py
+   ```
