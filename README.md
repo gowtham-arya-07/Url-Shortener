@@ -24,5 +24,6 @@ Ensure you have Python installed (version 3.6 or later).
    ```
 2. Run the App
   ```sh
+      pip install -r requirements.txt
       python app.py
    ```
