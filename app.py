@@ -1,13 +1,15 @@
-from flask import Flask, request, jsonify, redirect, render_template
+from flask import Flask, request, jsonify, redirect, render_template, flash
 from flask_sqlalchemy import SQLAlchemy
 import shortuuid
 import datetime
 import qrcode
 import io
 import base64
+import validators
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///urls.db'
+app.secret_key = 'test'
 db = SQLAlchemy(app)
 
 class ShortenedURL(db.Model):
@@ -30,7 +32,6 @@ def generate_qr(short_url):
 
 @app.route('/')
 def index():
-    print('hi')
     return render_template('index.html')
 
 @app.route('/shorten', methods=['POST'])
@@ -39,7 +40,10 @@ def shorten_url():
     original_url = data.get('original_url')
     custom_alias = data.get('custom_alias')
     expires_in_days = data.get('expires_in_days')
-
+    response = request.get(original_url)
+    if response.status_code != 200:
+        flash("Invalid URL. Please enter a valid URL.", "error")
+        return render_template('index.html', error=True)
     short_url = custom_alias if custom_alias else shortuuid.uuid()[:6]
     expires_at = datetime.datetime.utcnow() + datetime.timedelta(days=int(expires_in_days)) if expires_in_days else None
     
@@ -48,7 +52,7 @@ def shorten_url():
     db.session.commit()
     
     qr_code = generate_qr(f"http://localhost:5000/{short_url}")
-    return render_template('index.html', short_url=f"http://localhost:5000/{short_url}", qr_code=qr_code)
+    return render_template('index.html', short_url=f"http://localhost:5000/{short_url}", qr_code=qr_code, error=False)
 
 @app.route('/<short_url>')
 def redirect_url(short_url):
