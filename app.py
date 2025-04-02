@@ -5,6 +5,7 @@ import datetime
 import qrcode
 import io
 import base64
+import urllib
 import validators
 
 app = Flask(__name__)
@@ -30,6 +31,7 @@ def generate_qr(short_url):
     img.save(buf, format="PNG")
     return base64.b64encode(buf.getvalue()).decode()
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -40,9 +42,7 @@ def shorten_url():
     original_url = data.get('original_url')
     custom_alias = data.get('custom_alias')
     expires_in_days = data.get('expires_in_days')
-    response = request.get(original_url)
-    if response.status_code != 200:
-        flash("Invalid URL. Please enter a valid URL.", "error")
+    if not validators.url(original_url):
         return render_template('index.html', error=True)
     short_url = custom_alias if custom_alias else shortuuid.uuid()[:6]
     expires_at = datetime.datetime.utcnow() + datetime.timedelta(days=int(expires_in_days)) if expires_in_days else None
