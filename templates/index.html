@@ -9,6 +9,9 @@
         input, button { margin: 10px; padding: 8px; }
         .container { max-width: 400px; margin: auto; }
     </style>
+    {% if error %}
+    <script>alert("Invalid URL. Please enter a valid URL.");</script> 
+    {% endif %}
 </head>
 <body>
     <h2>URL Shortener</h2>
@@ -27,3 +30,15 @@
     {% endif %}
 </body>
 </html>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            const originalUrl = form.querySelector('input[name="original_url"]').value;
+            if (!originalUrl.startsWith('http://') && !originalUrl.startsWith('https://')) {
+                event.preventDefault();
+                alert('Please enter a valid URL starting with http:// or https://');
+            }
+        });
+    });
+</script>
